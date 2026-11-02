@@ -21,6 +21,11 @@ jobs:
           npm install
           npm install @capacitor/core @capacitor/cli @capacitor/android
 
+      - name: Build Web Assets
+        run: |
+          # Runs your package.json build script if it exists
+          npm run build --if-present
+
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
@@ -29,8 +34,9 @@ jobs:
 
       - name: Initialize & Sync Capacitor
         run: |
+          # Initialize capacitor config if missing
           if [ ! -f "capacitor.config.json" ] && [ ! -f "capacitor.config.ts" ]; then
-            npx cap init "Belly Burg" "com.bellyburg.app" --web-dir "www"
+            npx cap init "Belly Burg" "com.bellyburg.app" --web-dir "dist"
           fi
           npx cap add android || true
           npx cap copy android
