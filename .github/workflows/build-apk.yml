@@ -23,7 +23,7 @@ jobs:
 
       - name: Build Web Assets
         run: |
-          # Runs your package.json build script if it exists
+          # This compiles your React/Vue/HTML project if a build script exists
           npm run build --if-present
 
       - name: Setup Java JDK
@@ -34,12 +34,14 @@ jobs:
 
       - name: Initialize & Sync Capacitor
         run: |
-          # Initialize capacitor config if missing
+          # If config doesn't exist, create it pointing to the standard 'dist' or 'www' folder
           if [ ! -f "capacitor.config.json" ] && [ ! -f "capacitor.config.ts" ]; then
             npx cap init "Belly Burg" "com.bellyburg.app" --web-dir "dist"
           fi
+          
+          # Ensure android platform is added and web assets are copied over
           npx cap add android || true
-          npx cap copy android
+          npx cap copy
           npx cap sync android
 
       - name: Build Android APK
